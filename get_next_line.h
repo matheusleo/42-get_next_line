@@ -6,7 +6,7 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:34 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/21 18:34:04 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/05/24 21:44:47 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # endif
 
 char	*get_next_line(int fd);
-char	*ft_strdup(const char *s);
 char	*ft_strchr(const char *s, int c);
+size_t	ft_strlen(const char *s);
 char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif

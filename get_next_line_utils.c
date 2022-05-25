@@ -6,13 +6,13 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:30 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/21 18:34:16 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/05/24 21:44:21 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static size_t	ft_strlen(const char *s)
+size_t	ft_strlen(const char *s)
 {
 	size_t	length;
 
@@ -20,27 +20,6 @@ static size_t	ft_strlen(const char *s)
 	while (s[length])
 		length++;
 	return (length);
-}
-
-char	*ft_strdup(const char *s)
-{
-	int		s_len;
-	char	*dest;
-	int		d_len;
-
-	d_len = 0;
-	s_len = ft_strlen(s);
-	dest = (char *)malloc(sizeof(char) * (s_len + 1));
-	if (dest)
-	{
-		while (d_len <= s_len)
-		{
-			dest[d_len] = s[d_len];
-			d_len++;
-		}
-		return (dest);
-	}
-	return (NULL);
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -81,4 +60,24 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	index = join(new_str, s2, index);
 	new_str[index] = '\0';
 	return (new_str);
+}
+
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
+{
+	size_t	s_len;
+	size_t	s_index;
+	size_t	d_index;
+
+	s_len = ft_strlen(src);
+	d_index = ft_strlen(dst);
+	s_index = 0;
+	if (d_index >= size)
+		return (s_len + size);
+	while (s_index + d_index + 1 < size && src[s_index])
+	{
+		dst[d_index + s_index] = src[s_index];
+		s_index++;
+	}
+	dst[d_index + s_index] = '\0';
+	return (d_index + s_len);
 }
