@@ -6,57 +6,63 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:27 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/24 22:38:25 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/05/26 23:15:13 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h> //printf
 
-char	*create_line(char *line, char *to_append)
+char	*compute_line(char *line)
 {
 	size_t	index;
-	size_t	len_to_append;
-	char	*new_str;
 	char	*new_line;
+	size_t	line_len;
 
 	index = 0;
-	if (ft_strchr(to_append, '\n'))
-		len_to_append = ft_strchr(to_append, '\n') - to_append;
-	else
-		len_to_append = ft_strlen(to_append);
-	new_str = (char *)malloc(sizeof(char) * len_to_append);
-	while (index <= len_to_append)
+	line_len = ft_strchr(line, '\n') - line + 2;
+	new_line = (char *)malloc(sizeof(char) * line_len);
+	if (!new_line)
+		return (NULL);
+	while (index < line_len)
 	{
-		new_str[index] = to_append[index];
+		new_line[index] = line[index];
 		index++;
 	}
-	new_line = ft_strjoin(line, new_str);
 	return (new_line);
 }
 
 char	*get_line(int fd)
 {
-	char	*line = "";
-	ssize_t		nb_read;
-	char		*temp;
+	static char	*line = "";
+	char	*new_line;
+	char	temp[BUFFER_SIZE];
+	ssize_t	nb_read;
 
-	temp = (char *)malloc(sizeof(char) * BUFFER_SIZE);
-	if (!temp)
-		return (NULL);
+	if (ft_strchr(line, '\n'))
+	{
+		new_line = compute_line(line);
+		if (!(ft_strchr(line, '\n') + 1))
+			line = "";
+		else
+			line = ft_strchr(line, '\n') + 1;
+		return (new_line);
+	}
 	nb_read = read(fd, temp, BUFFER_SIZE);
 	while (nb_read > 0)
 	{
-		if (ft_strchr(temp, '\n'))
+		line = ft_strjoin(line, temp);
+		if (ft_strchr(line, '\n'))
 		{
-			line = create_line(line, temp);
-			free(temp);
-			return (line);
+			new_line = compute_line(line);
+			if (!(ft_strchr(line, '\n') + 1))
+				line = "";
+			else
+				line = ft_strchr(line, '\n') + 1;
+			return (new_line);
 		}
-		line = create_line(line, temp);
 		nb_read = read(fd, temp, BUFFER_SIZE);
 	}
-	free(temp);
 	return (NULL);
 }
 
