@@ -6,72 +6,89 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:27 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/26 23:15:13 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/05/28 13:55:24 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h> //printf
 
-char	*compute_line(char *line)
+static char	*compute_line(char *line)
 {
 	size_t	index;
 	char	*new_line;
 	size_t	line_len;
 
 	index = 0;
-	line_len = ft_strchr(line, '\n') - line + 2;
+	if (ft_strchr(line, '\n'))
+		line_len = (ft_strchr(line, '\n') + 1) - line + 1;
+	else
+		line_len = ft_strlen(line) + 1;
 	new_line = (char *)malloc(sizeof(char) * line_len);
 	if (!new_line)
 		return (NULL);
-	while (index < line_len)
+	while (index < line_len - 1)
 	{
 		new_line[index] = line[index];
 		index++;
 	}
+	new_line[index] = '\0';
 	return (new_line);
 }
 
-char	*get_line(int fd)
+static char	*get_line(int fd)
 {
-	static char	*line = "";
+	static char	*line;
 	char	*new_line;
-	char	temp[BUFFER_SIZE];
+	char	temp[BUFFER_SIZE + 1];
 	ssize_t	nb_read;
+	char	*previous_line;
 
-	if (ft_strchr(line, '\n'))
+	if (line != NULL && ft_strchr(line, '\n'))
 	{
 		new_line = compute_line(line);
-		if (!(ft_strchr(line, '\n') + 1))
-			line = "";
+		previous_line = ft_strdup(line);
+		if (ft_strchr(previous_line, '\n') + 1)
+			line = ft_strchr(previous_line, '\n') + 1;
 		else
-			line = ft_strchr(line, '\n') + 1;
+			free(line);
+		free(previous_line);
 		return (new_line);
 	}
 	nb_read = read(fd, temp, BUFFER_SIZE);
 	while (nb_read > 0)
 	{
-		line = ft_strjoin(line, temp);
+		temp[nb_read] = '\0';
+		previous_line = ft_strdup(line);
+		line = ft_strjoin(previous_line, temp);
+		previous_line = ft_strdup(line);
 		if (ft_strchr(line, '\n'))
 		{
 			new_line = compute_line(line);
-			if (!(ft_strchr(line, '\n') + 1))
-				line = "";
+			if (ft_strchr(previous_line, '\n') + 1)
+				line = ft_strchr(previous_line, '\n') + 1;
 			else
-				line = ft_strchr(line, '\n') + 1;
+				free(line);
+			free(previous_line);
 			return (new_line);
 		}
 		nb_read = read(fd, temp, BUFFER_SIZE);
+	}
+	if (*line)
+	{
+		new_line = compute_line(line);
+		free(line);
+		return (new_line);
 	}
 	return (NULL);
 }
 
 char	*get_next_line(int fd)
 {
-	char	*next_line;
+	char	*current_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	next_line = get_line(fd);
-	return (next_line);
+	current_line = get_line(fd);
+	return (current_line);
 }

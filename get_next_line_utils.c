@@ -6,11 +6,12 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:30 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/26 23:04:07 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/05/28 13:31:55 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h> //printf
 
 size_t	ft_strlen(const char *s)
 {
@@ -51,6 +52,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	len_new_str;
 	size_t	index;
 
+	if (!s1)
+		s1 = "";
+	if (!s2)
+		s2 = "";
 	len_new_str = ft_strlen(s1) + ft_strlen(s2) + 1;
 	new_str = (char *)malloc(sizeof(char) * (len_new_str));
 	if (!new_str)
@@ -60,4 +65,27 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	index = join(new_str, s2, index);
 	new_str[index] = '\0';
 	return (new_str);
+}
+
+char	*ft_strdup(const char *s)
+{
+	int		s_len;
+	char	*dest;
+	int		d_len;
+
+	d_len = 0;
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	dest = (char *)malloc(sizeof(char) * (s_len + 1));
+	if (dest)
+	{
+		while (d_len <= s_len)
+		{
+			dest[d_len] = s[d_len];
+			d_len++;
+		}
+		return (dest);
+	}
+	return (NULL);
 }
