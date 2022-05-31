@@ -6,7 +6,7 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:27 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/31 09:46:48 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/05/31 20:04:58 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*check_remain(char *remain)
 
 	// index = -1;
 	//if remain's has not content
-	if (!remain)
+	if (!remain || ft_strlen(remain) == 0)
 		return (NULL);
 	//if remain's content can be returned
 	// if (ft_strchr(remain, '\n'))
@@ -36,8 +36,9 @@ char	*check_remain(char *remain)
 	// 	current_line[index] = '\0';
 	// 	return (current_line);
 	// }
-	// //if remain's content cannot be returned
+	//if remain's content cannot be returned
 	current_line = ft_strdup(remain);
+	// printf("return from check_remain - [%s]\n", current_line);
 	return (current_line);
 
 }
@@ -72,7 +73,7 @@ char	*get_remain(char *line_raw)
 {
 	char	*remain;
 
-	if (ft_strchr(line_raw, '\n'))
+	if (line_raw && ft_strchr(line_raw, '\n') + 1)
 		remain = ft_strdup(ft_strchr(line_raw, '\n') + 1);
 	else
 		remain = NULL;
@@ -92,10 +93,12 @@ char	*create_line(char **current_line, int fd)
 		save the current_line content in the current_line variable
 		return the current_line
 	*/
+	// printf("current_line from create_line - {%s}\n", *current_line);
 	if (*current_line && ft_strchr(*current_line, '\n'))
 	{
 		aux = ft_strdup(*current_line);
 		// printf("\n> aux - {%s}", aux);
+		free(*current_line);
 		*current_line = compute_line(aux);
 		return (get_remain(aux));
 	}
@@ -110,7 +113,6 @@ char	*create_line(char **current_line, int fd)
 	nb_read = read(fd, temp, BUFFER_SIZE);
 	if (nb_read <= 0)
 		return (NULL);
-	printf("nb_read - %ld", nb_read);
 	while (nb_read > 0)
 	{
 		// printf("\nnb_read - %ld\n", nb_read);
@@ -146,14 +148,9 @@ char	*get_next_line(int fd)
 		return (NULL);
 	// printf("remain - {%s}\n", remain);
 	current_line = check_remain(remain);
-	// printf("current_line - {%s}", current_line);
 	free(remain);
-	/*
-		problem with current_line:
-		it's returning the line + the remain
-	*/
 	remain = create_line(&current_line, fd);
-	printf("current_line {%s}\n", current_line);
+	// printf("remain {%s}\n", remain);
 	if (!remain)
 		free(remain);
 	/* @create_line should return the excess of current_line
