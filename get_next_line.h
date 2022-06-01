@@ -6,7 +6,7 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:34 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/31 10:07:19 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/05/31 20:13:05 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 1000000
 # endif
 
 char	*get_next_line(int fd);
