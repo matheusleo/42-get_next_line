@@ -6,13 +6,13 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:27 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/31 22:24:03 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/05/31 22:45:24 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*compute_line(char *line_raw)
+static char	*compute_line(char *line_raw)
 {
 	ssize_t	line_len;
 	char	*line;
@@ -35,7 +35,7 @@ char	*compute_line(char *line_raw)
 	return (line);
 }
 
-char	*get_remain(char *line_raw)
+static char	*get_remain(char *line_raw)
 {
 	char	*remain;
 
@@ -47,7 +47,7 @@ char	*get_remain(char *line_raw)
 	return (remain);
 }
 
-char	*mount_line(char **line_raw)
+static char	*mount_line(char **line_raw)
 {
 	char	*aux;
 
@@ -57,7 +57,7 @@ char	*mount_line(char **line_raw)
 	return (get_remain(aux));
 }
 
-char	*create_line(char **current_line, int fd)
+static char	*create_line(char **current_line, int fd)
 {
 	char	*aux;
 	ssize_t	nb_read;
