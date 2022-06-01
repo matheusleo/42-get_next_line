@@ -6,7 +6,7 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:27 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/31 22:44:40 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/06/01 14:38:13 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,12 @@ static char	*create_line(char **current_line, int fd)
 {
 	char	*aux;
 	ssize_t	nb_read;
-	char	temp[BUFFER_SIZE + 1];
+	char	*temp;
 
 	if (*current_line && ft_strchr(*current_line, '\n'))
 		return (mount_line(current_line));
+	temp = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	nb_read = read(fd, temp, BUFFER_SIZE);
-	if (nb_read <= 0)
-		return (NULL);
 	while (nb_read > 0)
 	{
 		temp[nb_read] = '\0';
@@ -79,12 +78,15 @@ static char	*create_line(char **current_line, int fd)
 		*current_line = ft_strjoin(aux, temp);
 		free(aux);
 		if (*current_line && ft_strchr(*current_line, '\n'))
+		{
+			free(temp);
 			return (mount_line(current_line));
+		}
 		nb_read = read(fd, temp, BUFFER_SIZE);
 	}
+	free(temp);
 	return (NULL);
 }
-
 char	*get_next_line(int fd)
 {
 	char		*current_line;
