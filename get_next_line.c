@@ -6,7 +6,7 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:27 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/31 20:04:58 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/05/31 21:53:12 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,11 @@
 char	*check_remain(char *remain)
 {
 	char	*current_line;
-	// ssize_t	line_len;
-	// ssize_t	index;
 
-	// index = -1;
-	//if remain's has not content
 	if (!remain || ft_strlen(remain) == 0)
 		return (NULL);
-	//if remain's content can be returned
-	// if (ft_strchr(remain, '\n'))
-	// {
-	// 	line_len = ft_strchr(remain, '\n') - remain + 2;
-	// 	current_line = (char *)malloc(sizeof(char) * line_len);
-	// 	if (!current_line)
-	// 		return (NULL);
-	// 	while (++index < line_len - 1)
-	// 		current_line[index] = remain[index];
-	// 	current_line[index] = '\0';
-	// 	return (current_line);
-	// }
-	//if remain's content cannot be returned
 	current_line = ft_strdup(remain);
-	// printf("return from check_remain - [%s]\n", current_line);
 	return (current_line);
-
 }
 
 char	*compute_line(char *line_raw)
@@ -50,10 +31,8 @@ char	*compute_line(char *line_raw)
 	ssize_t	index;
 
 	if (ft_strchr(line_raw, '\n'))
-		// create the computed line from start to the first '\n'
 		line_len = (ft_strchr(line_raw, '\n') + 1) - line_raw + 1;
 	else
-		// OR create the computed line from start to the final
 		line_len = ft_strlen(line_raw) + 1;
 	line = (char *)malloc(sizeof(char) * line_len);
 	if (!line)
@@ -65,7 +44,6 @@ char	*compute_line(char *line_raw)
 		index++;
 	}
 	line[index] = '\0';
-	// printf("line - %s\n", line);
 	return (line);
 }
 
@@ -78,7 +56,7 @@ char	*get_remain(char *line_raw)
 	else
 		remain = NULL;
 	free(line_raw);
-	return(remain);
+	return (remain);
 }
 
 char	*create_line(char **current_line, int fd)
@@ -86,36 +64,19 @@ char	*create_line(char **current_line, int fd)
 	char	*aux;
 	ssize_t	nb_read;
 	char	temp[BUFFER_SIZE + 1];
-	// 1. current_line has content
-	//	1.1 current_line == content that can be returned
-	/*
-		need to compute the line from the start to the first '\n'
-		save the current_line content in the current_line variable
-		return the current_line
-	*/
-	// printf("current_line from create_line - {%s}\n", *current_line);
+
 	if (*current_line && ft_strchr(*current_line, '\n'))
 	{
 		aux = ft_strdup(*current_line);
-		// printf("\n> aux - {%s}", aux);
 		free(*current_line);
 		*current_line = compute_line(aux);
 		return (get_remain(aux));
 	}
-	//	1.2 current_line == content that cannot be returned now
-	/*
-		need to read the file (l. 108)
-		save the info from the reading (l. 108-111)
-		mount the new line using the content of \
-		current_line and form the read file (l. 112-113)
-		verify again if it can be returned (step 2)
-	*/
 	nb_read = read(fd, temp, BUFFER_SIZE);
 	if (nb_read <= 0)
 		return (NULL);
 	while (nb_read > 0)
 	{
-		// printf("\nnb_read - %ld\n", nb_read);
 		temp[nb_read] = '\0';
 		if (*current_line)
 		{
@@ -136,7 +97,6 @@ char	*create_line(char **current_line, int fd)
 		nb_read = read(fd, temp, BUFFER_SIZE);
 	}
 	return (NULL);
-	//2. current_line == NULL
 }
 
 char	*get_next_line(int fd)
@@ -146,15 +106,10 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	// printf("remain - {%s}\n", remain);
 	current_line = check_remain(remain);
 	free(remain);
 	remain = create_line(&current_line, fd);
-	// printf("remain {%s}\n", remain);
 	if (!remain)
 		free(remain);
-	/* @create_line should return the excess of current_line
-		return the excess to remain after creating the line */
-	// printf(" > current_line - {%s}\n", current_line);
 	return (current_line);
 }
