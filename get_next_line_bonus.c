@@ -6,7 +6,7 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:27 by mleonard          #+#    #+#             */
-/*   Updated: 2022/06/01 14:38:13 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/06/01 14:55:02 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,13 @@ static char	*mount_line(char **line_raw)
 	return (get_remain(aux));
 }
 
-static char	*create_line(char **current_line, int fd)
+static char	*create_line(char **current_line, int fd, char *temp)
 {
 	char	*aux;
 	ssize_t	nb_read;
-	char	*temp;
 
 	if (*current_line && ft_strchr(*current_line, '\n'))
 		return (mount_line(current_line));
-	temp = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	nb_read = read(fd, temp, BUFFER_SIZE);
 	while (nb_read > 0)
 	{
@@ -78,29 +76,31 @@ static char	*create_line(char **current_line, int fd)
 		*current_line = ft_strjoin(aux, temp);
 		free(aux);
 		if (*current_line && ft_strchr(*current_line, '\n'))
-		{
-			free(temp);
 			return (mount_line(current_line));
-		}
 		nb_read = read(fd, temp, BUFFER_SIZE);
 	}
-	free(temp);
 	return (NULL);
 }
+
 char	*get_next_line(int fd)
 {
+	static char	*remain;
 	char		*current_line;
-	static char	*remain[1024];
+	char		*temp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!remain[fd] || ft_strlen(remain[fd]) == 0)
+	if (!remain || ft_strlen(remain) == 0)
 		current_line = NULL;
 	else
-		current_line = ft_strdup(remain[fd]);
-	free(remain[fd]);
-	remain[fd] = create_line(&current_line, fd);
-	if (!remain[fd])
-		free(remain[fd]);
+		current_line = ft_strdup(remain);
+	free(remain);
+	temp = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!temp)
+		return (NULL);
+	remain = create_line(&current_line, fd, temp);
+	if (!remain)
+		free(remain);
+	free(temp);
 	return (current_line);
 }
