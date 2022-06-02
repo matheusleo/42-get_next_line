@@ -6,12 +6,11 @@
 /*   By: mleonard <mleonard@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 21:50:30 by mleonard          #+#    #+#             */
-/*   Updated: 2022/05/28 13:31:55 by mleonard         ###   ########.fr       */
+/*   Updated: 2022/06/01 22:37:16 by mleonard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h> //printf
 
 size_t	ft_strlen(const char *s)
 {
