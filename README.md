@@ -21,5 +21,5 @@ Ex.: Veja o exemplo anterior, contudo dessa vez com o novo file descriptor, ao i
 Para utilizar a função `get_next_line`, basta compilar seu programa incluindo os arquivos `get_next_line.c` e `get_next_line_utils.c`
 
 ```
-	<COMPILADOR> -Wall -Wextra -Werror <FILE> get_next_line.c get_next_line_utils.c -I includes
+<COMPILADOR> -Wall -Wextra -Werror <FILE> get_next_line.c get_next_line_utils.c -I includes
 ```
